@@ -11,7 +11,6 @@ A translator for javascript keyboard events to and from consistent and familiar 
 Take your `keydown`, `keypress`, and `keyup` events and reliably translate them into keyboard keys and characters.
 
 # Example
-=======
 
 ```javascript
 myCanvas.addEventListener('keydown', (event) => {
@@ -48,7 +47,6 @@ textfield.addEventListener('keypress', (e) => {
 ```
 
 # Install
-=======
 
 ```
 npm i -S whatkey
