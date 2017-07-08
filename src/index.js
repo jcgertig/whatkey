@@ -1,3 +1,13 @@
+const keycodeCtrlKeys = {
+  'a': 'selectAll',
+  'c': 'copy',
+  's': 'save',
+  'v': 'paste',
+  'x': 'cut',
+  'y': 'redo',
+  'z': 'undo'
+};
+
 const keycodeShiftedKeys = {
   '/': '?',
   '.': '>',
@@ -34,7 +44,8 @@ const keycodeShiftedKeys = {
   'l': 'L',
   'm': 'M',
   'n': 'N',
-  'o': 'P',
+  'o': 'O',
+  'p': 'P',
   'q': 'q',
   'r': 'R',
   's': 'S',
@@ -56,14 +67,14 @@ for (const x in keycodeShiftedKeys) {
 const keydownKeycodeDictionary = {
   0: '\\',
 
-  8: '\b',
-  9: '\t',
+  8: 'backspace',
+  9: 'tab',
 
   12: 'num',
-  13: '\n',
+  13: 'enter',
 
   16: 'shift',
-  17: 'meta',  // 'ctrl' on windows, 'cmd' on mac
+  17: 'ctrl',
   18: 'alt',   // aka 'option'
   19: 'pause', // or sometimes 'break'?
   20: 'caps',
@@ -125,9 +136,9 @@ const keydownKeycodeDictionary = {
   88: 'x',
   89: 'y',
   90: 'z',
-  91: 'cmd',   // 'left window key'
-  92: 'cmd',   // 'right window key'
-  93: 'cmd',   // 'select key'
+  91: 'meta',   // 'left window key'
+  92: 'meta',   // 'right window key'
+  93: 'meta',   // 'select key'
 
   96: 'num0',
   97: 'num1',
@@ -183,19 +194,27 @@ const keydownKeycodeDictionary = {
   63289: 'num'
 };
 
-const keypressCharacterMap = {
-  '\r': '\n'
+const keypressCharacterMapOverides = {
+  '\r': 'enter'
 };
+const keypressCharacterMap = JSON.parse(JSON.stringify(keydownKeycodeDictionary));
+for (const key of Object.keys(keypressCharacterMapOverides)) {
+  keypressCharacterMap[key] = keypressCharacterMapOverides[key];
+}
 
 const keydownCharacterMap = {
   'num_subtract': '-',
   'num_enter': '\n',
   'num_decimal': '.',
-  'num_divide': '/'
+  'num_divide': '/',
+  'enter': '\n',
+  'tab': '\t',
+  'backspace': '\b'
 };
 
 export const unprintableKeys = [
-  '\b','num','shift','meta','alt','pause','caps','esc',
+  'backspace','enter','tab','num',
+  'shift','meta','alt','pause','caps','esc',
   'pageup','pagedown','end','home',
   'left','up','right','down',
   'print','insert','delete','cmd',
@@ -203,8 +222,17 @@ export const unprintableKeys = [
   'scroll','ctrl'
 ];
 
+const validEvents = ['keydown', 'keyup'];
+
+const isMobile = () => {
+  const ua = navigator.userAgent;
+  const mobile = /IEMobile|Windows Phone|Lumia/i.test(ua) ? 'w' : /iPhone|iP[oa]d/.test(ua) ? 'i' : /Android/.test(ua) ? 'a' : /BlackBerry|PlayBook|BB10/.test(ua) ? 'b' : /Mobile Safari/.test(ua) ? 's' : /webOS|Mobile|Tablet|Opera Mini|\bCrMo\/|Opera Mobi/i.test(ua) ? 1 : 0;
+  return mobile !== 0;
+};
+
 function getKeypressKeycodeValue(charcode) {
   const character = String.fromCharCode(charcode);
+  if (isMobile()) { return character }
   if (character in keyCodeUnshiftedKeys) {
     return keyCodeUnshiftedKeys[character];
   } else if (character in keypressCharacterMap) {
@@ -213,19 +241,19 @@ function getKeypressKeycodeValue(charcode) {
   return character;
 }
 
-const validEvents = ['keydown', 'keyup'];
-
 export default function(event) {
   let key;
-  if (event.type === 'keypress') {
+  if (event.type === 'keypress' && !isMobile()) {
     key = getKeypressKeycodeValue(event.charCode);
+  } else if (event.type === 'keypress' && isMobile()) {
+    key = getKeypressKeycodeValue(event.keyCode);
   } else if (validEvents.indexOf(event.type) > -1) {
     if (event.which !== undefined) {
       key = keydownKeycodeDictionary[event.which];
     } else if (event.keyCode !== undefined) {
       key = keydownKeycodeDictionary[event.keyCode];
     } else {
-      key = '\n';
+      key = 'enter';
     }
   } else {
     return false;
@@ -234,6 +262,8 @@ export default function(event) {
   let char = key;
   if (event.shiftKey && key in keycodeShiftedKeys) {
     char = keycodeShiftedKeys[key];
+  } else if (event.ctrlKey && key in keycodeCtrlKeys) {
+    char = keycodeCtrlKeys[key];
   } else if (key in keydownCharacterMap) {
     char = keydownCharacterMap[key];
   }

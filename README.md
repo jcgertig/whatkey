@@ -1,11 +1,16 @@
+# whatkey
 
-`whatkey`
-=====
+[![Downloads][npm-dm]][package-url]
+[![Downloads][npm-dt]][package-url]
+[![NPM Version][npm-v]][package-url]
+[![Dependencies][deps]][package-url]
+[![Dev Dependencies][dev-deps]][package-url]
+[![License][license]][package-url]
 
 A translator for javascript keyboard events to and from consistent and familiar character and key representations.
 Take your `keydown`, `keypress`, and `keyup` events and reliably translate them into keyboard keys and characters.
 
-Example
+# Example
 =======
 
 ```javascript
@@ -42,11 +47,13 @@ textfield.addEventListener('keypress', (e) => {
 });
 ```
 
-Install
+# Install
 =======
 
 ```
-npm install whatkey
+npm i -S whatkey
+// or
+yarn add whatkey
 // or
 bower install whatkey
 ```
@@ -74,11 +81,12 @@ Using whatkey:
 The `key` and `char` values contain the actual character typed ('a', '$', '\t', etc) except in the following cases where the character isn't printable.
 The string on the left is the string that represents the conceptual key/character on the right:
 
-* \b - backspace key
-* \n - enter key
-* \t - tab key
+* backspace - Backspace key. Note that the `char` value for this will be '\b'
+* enter - Enter key. Note that the `char` value for this will be '\n'
+* tab - Tab key. Note that the `char` value for this will be '\t'
 * shift - the shift key
-* meta - ctrl/cmd (here 'meta' is used since the character is named different things on mac vs windows)
+* meta - windows / command key (here 'meta' is used since the character is named different things on mac vs windows)
+* ctrl - control key
 * alt - alt key
 * pause - pause key
 * caps - caps lock key
@@ -139,3 +147,11 @@ If you need accuracy for the `key`, use the 'keydown' event.
 License
 =======
 Released under the MIT license: http://opensource.org/licenses/MIT
+
+[npm-dm]: https://img.shields.io/npm/dm/whatkey.svg
+[npm-dt]: https://img.shields.io/npm/dt/whatkey.svg
+[npm-v]: https://img.shields.io/npm/v/whatkey.svg
+[deps]: https://img.shields.io/david/jcgertig/whatkey.svg
+[dev-deps]: https://img.shields.io/david/dev/jcgertig/whatkey.svg
+[license]: https://img.shields.io/npm/l/whatkey.svg
+[package-url]: https://npmjs.com/package/whatkey
