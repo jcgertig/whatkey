@@ -17,7 +17,7 @@ myCanvas.addEventListener('keydown', (event) => {
   const key = whatkey(event).key;
   if (key === 'w') {
     goUp();
-  } else if(key === '\n') {
+  } else if(key === 'enter') {
     confirm();
   } else if (key === 'shift') {
     if (event.location === 1) { // left shift
@@ -25,12 +25,12 @@ myCanvas.addEventListener('keydown', (event) => {
     } else {                   // right shift
       shiftUp();
     }
-  } else if (key === '\b') {
+  } else if (key === 'backspace') {
     event.preventDefault();     // prevent changing pages
   } else {
     const char = whatkey(event).char;
     if (char === 'r') {
-      reload()''
+      reload();
     } else if (char === 'R') {
       secondaryReload();
     }
